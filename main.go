@@ -3,9 +3,10 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"net/http"
+
+	"io"
 
 	"github.com/getlantern/systray"
 )
@@ -21,6 +22,7 @@ type IPInfo struct {
 }
 
 func main() {
+	log.Println(`Starting locra...`)
 	systray.Run(onReady, onExit)
 }
 
@@ -91,7 +93,7 @@ func fetchIPInfo() (*IPInfo, error) {
 	}
 	defer resp.Body.Close()
 
-	body, err := ioutil.ReadAll(resp.Body)
+	body, err := io.ReadAll(io.Reader(resp.Body))
 	if err != nil {
 		return nil, err
 	}
